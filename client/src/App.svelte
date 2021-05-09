@@ -2,12 +2,14 @@
 import { onMount, tick } from 'svelte';
 import Message from './components/Message.svelte'
 import MessageForm from './components/MessageForm.svelte'
+import { getUserId } from './lib/getUserId'
 
-const currentUserId = Math.random().toString(32).substring(2)
 let message = '';
 let messages = [];
 let socket = null;
 let board;
+
+const currentUserId = getUserId();
 
 const scrollToBottom = async () => {
   await tick();
@@ -19,9 +21,9 @@ const handleSubmit = () => {
     return
   }
   messages = [...messages, message]
-  scrollToBottom()
   socket.send(JSON.stringify({userId: currentUserId, message}))
   message = ""
+  scrollToBottom()
 }
 
 onMount(() => {
@@ -61,14 +63,11 @@ onMount(() => {
     margin: auto;
   }
 
-  .message-form-wrapper {
-    display: flex;
-  }
-
   .board {
     padding: 1em;
     margin: 0 auto 1em;
     background-color: #ebeeee;
+    border-radius: 3px;
     height: 85vh;
     overflow: scroll;
     scroll-behavior: smooth;
@@ -80,5 +79,9 @@ onMount(() => {
     text-align: center;
     font-size: 2em;
     font-weight: 400;
+  }
+
+  .message-form-wrapper {
+    display: flex;
   }
 </style>
