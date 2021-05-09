@@ -42,7 +42,7 @@ onMount(() => {
 
 <main>
   <div class="wrapper">
-    <h1>Svelte Sample Chat</h1>
+    <h1>Svelte simple chat</h1>
     <div class="board" bind:this={board} >
       {#each messages as {userId, message: mg}, i}
         <Message currentUserId={currentUserId} userId={userId} message={mg} />
