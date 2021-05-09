@@ -64,6 +64,7 @@ onMount(() => {
   }
 
   .board {
+    width: 100%;
     padding: 1em;
     margin: 0 auto 1em;
     background-color: #ebeeee;
