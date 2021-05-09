@@ -8,17 +8,17 @@ type Chat = {
 }
 
 // インメモリでデータを保持
-const chatBoard: Chat[] = []
+const chatBoard: Chat[] = [];
 
 wss.on('connection', (ws) => {
   ws.on('message', (payload) => {
     if(typeof payload === 'string') {
-      chatBoard.push(JSON.parse(payload))
+      chatBoard.push(JSON.parse(payload));
     }
 
     // 全ての接続先に送信
     wss.clients.forEach((client) => {
-      client.send(JSON.stringify(chatBoard))
+      client.send(JSON.stringify(chatBoard));
     })
   });
 
