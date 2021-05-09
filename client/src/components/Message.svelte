@@ -2,7 +2,6 @@
 export let currentUserId
 export let userId
 export let message
-
 </script>
 
 <div class="message-container" class:mine={currentUserId === userId}>
@@ -34,10 +33,6 @@ export let message
     margin: 15px;
     border-radius: 3px;
     white-space: pre-wrap;
-  }
-
-  .balloon p {
-    margin: 0;
-    padding: 0;
+    word-break: break-word;
   }
 </style>

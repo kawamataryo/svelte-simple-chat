@@ -1,5 +1,5 @@
 <script>
-import { onMount } from 'svelte';
+import { onMount, tick } from 'svelte';
 import Message from './components/Message.svelte'
 import MessageForm from './components/MessageForm.svelte'
 
@@ -9,8 +9,9 @@ let messages = [];
 let socket = null;
 let board;
 
-const scrollBottom = () => {
-  setTimeout(() =>  {board.scrollTop = board.scrollHeight}, 0);
+const scrollToBottom = async () => {
+  await tick();
+  board.scrollTop = board.scrollHeight;
 }
 
 const handleSubmit = () => {
@@ -18,8 +19,8 @@ const handleSubmit = () => {
     return
   }
   messages = [...messages, message]
-  scrollBottom()
-  socket.send(JSON.stringify({currentUserId, message}))
+  scrollToBottom()
+  socket.send(JSON.stringify({userId: currentUserId, message}))
   message = ""
 }
 
@@ -32,38 +33,41 @@ onMount(() => {
 
   socket.onmessage = (event) => {
     messages = JSON.parse(event.data)
-    scrollBottom()
+    scrollToBottom()
   };
 })
 </script>
 
 <main>
-  <h1>Svelte Sample Chat</h1>
-  <div class="board" bind:this={board} >
-    {#each messages as {userId, message: mg}, i}
-      <Message currentUser={currentUserId} userId={userId} message={mg} />
-    {/each}
-  </div>
-  <div class="message-form-wrapper">
-    <MessageForm bind:message={message} on:submit={handleSubmit}/>
+  <div class="wrapper">
+    <h1>Svelte Sample Chat</h1>
+    <div class="board" bind:this={board} >
+      {#each messages as {userId, message: mg}, i}
+        <Message currentUserId={currentUserId} userId={userId} message={mg} />
+      {/each}
+    </div>
+    <div class="message-form-wrapper">
+      <MessageForm bind:message={message} on:submit={handleSubmit}/>
+    </div>
   </div>
 </main>
 
 <style>
-  .message-form-wrapper {
-    position: fixed;
+  .wrapper {
+    height: 100vh;
     display: flex;
-    width: 390px;
-    right: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    bottom: -20px;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+  }
+
+  .message-form-wrapper {
+    display: flex;
   }
 
   .board {
     padding: 1em;
-    max-width: 400px;
-    margin: 0 auto;
+    margin: 0 auto 1em;
     background-color: #ebeeee;
     height: 85vh;
     overflow: scroll;
