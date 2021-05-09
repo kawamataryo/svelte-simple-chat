@@ -6,10 +6,9 @@
   const dispatch = createEventDispatcher();
 
   const handleSubmit = () => {
-    dispatch('submit')
-  }
-
+    dispatch('submit');
+  };
 </script>
 
-<input bind:value={message} class="input" type="text" placeholder="Your message">
-<button class="button is-link" on:click={handleSubmit}>submit</button>
+<input bind:value="{message}" class="input" type="text" placeholder="Your message" />
+<button class="button is-link" on:click="{handleSubmit}">submit</button>

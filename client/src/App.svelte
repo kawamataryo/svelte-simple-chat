@@ -1,55 +1,55 @@
 <script lang="ts">
-import { onMount, tick } from 'svelte';
-import Message from './components/Message.svelte'
-import MessageForm from './components/MessageForm.svelte'
-import { getUserId } from './lib/getUserId'
+  import { onMount, tick } from 'svelte';
+  import Message from './components/Message.svelte';
+  import MessageForm from './components/MessageForm.svelte';
+  import { getUserId } from './lib/getUserId';
 
-let message = '';
-let messages: {userId: string, message: string}[] = [];
-let socket: null | WebSocket = null;
-let board: null | Element;
+  let message = '';
+  let messages: { userId: string; message: string }[] = [];
+  let socket: null | WebSocket = null;
+  let board: null | Element;
 
-const currentUserId = getUserId();
+  const currentUserId = getUserId();
 
-const scrollToBottom = async () => {
-  await tick();
-  board.scrollTop = board.scrollHeight;
-}
-
-const handleSubmit = () => {
-  if (!message) {
-    return
-  }
-  messages = [...messages, { userId: currentUserId, message}]
-  socket.send(JSON.stringify({userId: currentUserId, message}))
-  message = ""
-  scrollToBottom()
-}
-
-onMount(() => {
-  socket = new WebSocket('ws://localhost:8082');
-
-  socket.onopen = () => {
-    console.log("socket connected")
-  }
-
-  socket.onmessage = (event) => {
-    messages = JSON.parse(event.data)
-    scrollToBottom()
+  const scrollToBottom = async () => {
+    await tick();
+    board.scrollTop = board.scrollHeight;
   };
-})
+
+  const handleSubmit = () => {
+    if (!message) {
+      return;
+    }
+    messages = [...messages, { userId: currentUserId, message }];
+    socket.send(JSON.stringify({ userId: currentUserId, message }));
+    message = '';
+    scrollToBottom();
+  };
+
+  onMount(() => {
+    socket = new WebSocket('ws://localhost:8082');
+
+    socket.onopen = () => {
+      console.log('socket connected');
+    };
+
+    socket.onmessage = (event) => {
+      messages = JSON.parse(event.data);
+      scrollToBottom();
+    };
+  });
 </script>
 
 <main>
   <div class="wrapper">
     <h1>Svelte simple chat</h1>
-    <div class="board" bind:this={board} >
-      {#each messages as {userId, message: mg}}
-        <Message currentUserId={currentUserId} userId={userId} message={mg} />
+    <div class="board" bind:this="{board}">
+      {#each messages as { userId, message: mg }}
+        <Message currentUserId="{currentUserId}" userId="{userId}" message="{mg}" />
       {/each}
     </div>
     <div class="message-form-wrapper">
-      <MessageForm bind:message={message} on:submit={handleSubmit}/>
+      <MessageForm bind:message on:submit="{handleSubmit}" />
     </div>
   </div>
 </main>

@@ -1,12 +1,11 @@
 <script lang="ts">
-export let currentUserId: string
-export let userId: string
-export let message: string
+  export let currentUserId: string;
+  export let userId: string;
+  export let message: string;
 </script>
 
-<div class="message-container" class:mine={currentUserId === userId}>
-  <img width="40px" src={`https://avatars.dicebear.com/api/bottts/` + userId + ".svg"}
-       alt="Avatar"/>
+<div class="message-container" class:mine="{currentUserId === userId}">
+  <img width="40px" src="{`https://avatars.dicebear.com/api/bottts/` + userId + '.svg'}" alt="Avatar" />
   <div class="balloon">{message}</div>
 </div>
 
