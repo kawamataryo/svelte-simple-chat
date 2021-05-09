@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 import { onMount, tick } from 'svelte';
 import Message from './components/Message.svelte'
 import MessageForm from './components/MessageForm.svelte'
 import { getUserId } from './lib/getUserId'
 
 let message = '';
-let messages = [];
-let socket = null;
-let board;
+let messages: {userId: string, message: string}[] = [];
+let socket: null | WebSocket = null;
+let board: null | Element;
 
 const currentUserId = getUserId();
 
@@ -20,7 +20,7 @@ const handleSubmit = () => {
   if (!message) {
     return
   }
-  messages = [...messages, message]
+  messages = [...messages, { userId: currentUserId, message}]
   socket.send(JSON.stringify({userId: currentUserId, message}))
   message = ""
   scrollToBottom()
@@ -44,7 +44,7 @@ onMount(() => {
   <div class="wrapper">
     <h1>Svelte simple chat</h1>
     <div class="board" bind:this={board} >
-      {#each messages as {userId, message: mg}, i}
+      {#each messages as {userId, message: mg}}
         <Message currentUserId={currentUserId} userId={userId} message={mg} />
       {/each}
     </div>

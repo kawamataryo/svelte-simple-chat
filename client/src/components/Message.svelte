@@ -1,7 +1,7 @@
-<script>
-export let currentUserId
-export let userId
-export let message
+<script lang="ts">
+export let currentUserId: string
+export let userId: string
+export let message: string
 </script>
 
 <div class="message-container" class:mine={currentUserId === userId}>
