@@ -17,9 +17,7 @@
   };
 
   const handleSubmit = () => {
-    if (!message) {
-      return;
-    }
+    if (!message) { return }
     messages = [...messages, { userId: currentUserId, message }];
     socket.send(JSON.stringify({ userId: currentUserId, message }));
     message = '';
@@ -34,6 +32,7 @@
     };
 
     socket.onmessage = (event) => {
+      if(!event.data) { return }
       messages = JSON.parse(event.data);
       scrollToBottom();
     };
